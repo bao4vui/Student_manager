@@ -1,7 +1,5 @@
-
 from asyncio.windows_events import NULL
 import PySimpleGUI as sg
-import PySimpleGUIQt as sg2
 import mysql.connector
 
 
@@ -20,7 +18,7 @@ for i in student:
     #print(list(i))
 
 sg.theme('LightBlue1')
-std_headings = ['Họ_và_tên','Ngày_sinh','ID','Lớp','Giới_tính','Nơi_sinh','Dân_tộc','Mồ côi','Địa_chỉ','Ghi chú']
+std_headings = ['Họ_và_tên','Ngày_sinh','ID','Lớp','Giới_tính','Nơi_sinh','Dân_tộc','Địa_chỉ','Ghi chú']
 layout = [[sg.Text('\t\t\t   Danh sách học sinh',justification='center',font = 'Calibra 20')],
           [sg.Table(student_list,
                     std_headings,
@@ -42,7 +40,6 @@ def Insert_student(window):
                                                                    [sg.T('Giới tính:'),sg.Checkbox('Nam',k='-NAM-'),sg.Checkbox('Nữ',k='-NỮ-',expand_x=True)],
                                                                    [sg.T('Nơi sinh:'),sg.In(k='-BORN-',expand_x=True)],
                                                                    [sg.T('Dân tộc:'),sg.In(k='-KIND-',expand_x=True)],
-                                                                   [sg.T('Mồ côi không?:'),sg.Checkbox('Có',k='-YES-'),sg.Checkbox('Không',k='-NO-',expand_x=True)],
                                                                    [sg.T('Địa chỉ:'),sg.In(k='-ADDRESS-',expand_x=True)],
                                                                    [sg.T('Ghi chú:'),sg.In(k='-NOTE-',expand_x=True)],
                                                                    [sg.OK('Xác nhận',key='-OK-'),sg.Cancel(key='-CANCEL-')]])
@@ -58,14 +55,9 @@ def Insert_student(window):
                     sex = ''
                     if values2['-NAM-']: sex = 'Nam'
                     elif values2['-NỮ-']:sex = 'Nữ'
-                    
-                    mồ_côi = ''
-                    if values2['-YES-']: mồ_côi = 'Có'
-                    elif values2['-NO-']:mồ_côi = 'Không'
-                    
-                    mycursor.execute(('insert into hocsinh values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'),(values2['-FNAME-'],DoB,values2['-ID-'],values2['-CLASS-'],values2['-SEX-'],values2['-BORN-'],values2['-KIND-'],mồ_côi,values2['-ADDRESS-'],values2['-NOTE-'])) 
+                    mycursor.execute(('insert into hocsinh values(%s,%s,%s,%s,%s,%s,%s,%s,%s)'),(values2['-FNAME-'],DoB,values2['-ID-'],values2['-CLASS-'],values2['-SEX-'],values2['-BORN-'],values2['-KIND-'],values2['-ADDRESS-'],values2['-NOTE-'])) 
                     sg.popup('Đã thêm thông tin học sinh!')
-                    student_list.append([values2['-FNAME-'],DoB,values2['-ID-'],values2['-CLASS-'],values2['-SEX-'],values2['-BORN-'],values2['-KIND-'],mồ_côi,values2['-ADDRESS-'],values2['-NOTE-']])
+                    student_list.append([values2['-FNAME-'],DoB,values2['-ID-'],values2['-CLASS-'],values2['-SEX-'],values2['-BORN-'],values2['-KIND-'],values2['-ADDRESS-'],values2['-NOTE-']])
                     window['-STDTABLE-'].update(student_list)
                     mydb.commit()
                     add_student.close()
@@ -85,12 +77,13 @@ def Fix_student(window,row,column,values):
 
 def Find_student(window,values):
     student_search = []
-    for i in range(10):
+    for i in range(9):
         for j in range(len(student_list)):
-            if values['-INFOR-'] == student_list[j][i]:
+            if values['-INFOR-'] in student_list[j][i]:
                 student_search.append(student_list[j])
                 window['-STDTABLE-'].update(student_search)
     if values['-INFOR-'] == '': window['-STDTABLE-'].update(student_list)
+    student_search.clear()
     
 def Delete_student(window,row):
     #print(hs.student_list[row-1][2])

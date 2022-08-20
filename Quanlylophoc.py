@@ -1,7 +1,9 @@
 import PySimpleGUI as sg
 from Quanlyhocsinh import mydb
+from openpyxl import Workbook
+import os
 
-cls_headings = ['Lớp','Mã_lớp','Giáo_viên_chủ_nhiệm','Niên_khóa']
+cls_headings = ['Lớp','Mã_lớp','Sĩ số','Giáo_viên_chủ_nhiệm','Niên_khóa']
 cls_list = []
 stdmini_list = []
 tkb_list = [] #Mỗi lần 1 lớp chứ ko phải show ra tất cả các lớp
@@ -21,7 +23,7 @@ cls_layout = [[sg.Text('          Danh sách lớp học',justification='center'
                         enable_click_events=True,
                         right_click_selects = True,
                         right_click_menu = ['menu',['Xuất ra danh sách học sinh','Thời khóa biểu']],
-                        k='-CLSTABLE-'),sg.Column([[sg.Button('Nhập thêm lớp',key='-INSERT0-',expand_x=True)],
+                        k='-CLSTABLE-'),sg.Column([[sg.Button('Nhập thêm lớp',key='-ADDCLS-',expand_x=True)],
                                                    [sg.Button('Sửa',expand_x=True,key='-FIX0-',disabled=True)],
                                                    [sg.Button('Xóa',expand_x=True,disabled=True,key= '-DEL0-')]]),
                 sg.VSeparator(),
@@ -69,6 +71,32 @@ def Xuất_ra_danh_sách_học_sinh(row,window):
     print(stdmini_list)    
     window['-STDTABLEMINI-'].update(stdmini_list,visible=True)
 
+def Nhập_thêm_lớp(window):
+    cls_list.clear()
+    add_cls = sg.Window('Nhập thêm lớp',[[sg.T('Tên lớp mới:            '),sg.In(k='-NEWCLSNAME-')],
+                                         [sg.T('Mã lớp:                    '),sg.In(k='-NEWCLS-')],
+                                         [sg.T('Giáo viên Chủ nhiệm: '),sg.In(k='-NEWCLSTEACHER-')],
+                                         [sg.T('Sĩ Số:                      '),sg.In(k='-NUMSTD-')],
+                                         [sg.T('Niên khóa:                '),sg.In(k='-NEWCLSYEARS-')],
+                                         [sg.OK()]
+                                         ])
+    while True:
+        evt,val = add_cls.read()
+        if evt == sg.WIN_CLOSED:
+            break
+        if evt == 'OK':
+           if val['-NEWCLSNAME-'] == '' and val['-NEWCLS-'] == '' and val['-NUMSTD-'] == '' and val['-NEWCLSTEACHER-'] == '' and val['-NEWCLSYEARS-'] == '':
+               break 
+           mycursor0.execute(('insert into lophoc values(%s,%s,%s,%s,%s)'),(val['-NEWCLSNAME-'],val['-NEWCLS-'],val['-NUMSTD-'],val['-NEWCLSTEACHER-'],val['-NEWCLSYEARS-']))
+           mydb.commit()
+           sg.popup('Thêm lớp thành công')
+           break 
+    add_cls.close()
+    mycursor0.execute('select * from lophoc')
+    classes = mycursor0.fetchall()
+    for i in classes:
+        cls_list.append(list(i))
+    window['-CLSTABLE-'].update(cls_list)
     
 def Sửa_thông_tin_lớp(window,row,column,values):
     cls_list[row-1][column-1] = values['-INFOR0-']
@@ -99,60 +127,63 @@ def Nhập_hạnh_kiểm(row,window,event):
 def Thời_khóa_biểu(row,window):
     tkb_list.clear()
     tkb_headings = ['Tiết','Thứ_2','Thứ_3','Thứ_4','Thứ_5','Thứ_6','Thứ_7']
-    query = ()
+    
     mycursor0.execute(('select * from thoikhoabieu where Lớp=%s'),(cls_list[row-1][0],))
     tkb = mycursor0.fetchall()
     for i in tkb:
         tkb_list.append(list(i[1:]))
+    print(len(tkb_list))    
     if len(tkb_list) < 5:
-        for i in range(len(tkb_list),6):
+        for i in range(len(tkb_list),5):
             t = i+1
             mycursor0.execute("insert into thoikhoabieu values (NULL,%s,'Hello','','','','','',%s)",(t,cls_list[row-1][0])) 
+            
     mydb.commit()
-    tkb = mycursor0.fetchall()
+    mycursor0.execute(('select * from thoikhoabieu where Lớp=%s'),(cls_list[row-1][0],))
+    tkb1 = mycursor0.fetchall()
     
-    for i in tkb:
+    for i in tkb1:
         tkb_list.append(list(i[1:]))     
-    print(tkb_list[0]) 
+    print(len(tkb_list)) 
     
     TKB_fixlayout = [[sg.T('Tiết'),sg.T('Thứ 2',s=(10,1)),sg.T('Thứ 3',s = (10,1)),sg.T('Thứ 4',s = (4,1)),sg.T('   Thứ 5',s = (9,1)),sg.T('Thứ 6',s = (7,1)),sg.T('Thứ 7',s = (7,1))],
                      [sg.T(' 1'),sg.In(tkb_list[0][1],s = (10,1),k='2-1'),sg.In(tkb_list[0][2],s = (10,1),k='3-1'),sg.In(tkb_list[0][3],s = (10,1),k='4-1'),sg.In(tkb_list[0][4],s = (10,1),k='5-1'),sg.In(tkb_list[0][5],s = (10,1),k='6-1'),sg.In(tkb_list[0][6],s = (10,1),k='7-1')],
                      [sg.T(' 2'),sg.In(tkb_list[1][1],s = (10,1),k='2-2'),sg.In(tkb_list[1][2],s = (10,1),k='3-2'),sg.In(tkb_list[1][3],s = (10,1),k='4-2'),sg.In(tkb_list[1][4],s = (10,1),k='5-2'),sg.In(tkb_list[1][5],s = (10,1),k='6-2'),sg.In(tkb_list[1][6],s = (10,1),k='7-2')],
                      [sg.T(' 3'),sg.In(tkb_list[2][1],s = (10,1),k='2-3'),sg.In(tkb_list[2][2],s = (10,1),k='3-3'),sg.In(tkb_list[2][3],s = (10,1),k='4-3'),sg.In(tkb_list[2][4],s = (10,1),k='5-3'),sg.In(tkb_list[2][5],s = (10,1),k='6-3'),sg.In(tkb_list[2][6],s = (10,1),k='7-3')],
                      [sg.T(' 4'),sg.In(tkb_list[3][1],s = (10,1),k='2-4'),sg.In(tkb_list[3][2],s = (10,1),k='3-4'),sg.In(tkb_list[3][3],s = (10,1),k='4-4'),sg.In(tkb_list[3][4],s = (10,1),k='5-4'),sg.In(tkb_list[3][5],s = (10,1),k='6-4'),sg.In(tkb_list[3][6],s = (10,1),k='7-4')],
-                     [sg.T(' 5'),sg.In(tkb_list[4][1],s = (10,1),k='2-5'),sg.In(tkb_list[4][2],s = (10,1),k='3-5'),sg.In(tkb_list[4][3],s = (10,1),k='4-5'),sg.In(tkb_list[4][4],s = (10,1),k='5-5'),sg.In(tkb_list[4][5],s = (10,1),k='6-5'),sg.In(tkb_list[4][6],s = (10,1),k='7-5')],
-                     [sg.OK()]
+                     [sg.T(' 5'),sg.In(tkb_list[4][1],s = (10,1),k='2-5'),sg.In(tkb_list[4][2],s = (10,1),k='3-5'),sg.In(tkb_list[4][3],s = (10,1),k='4-5'),sg.In(tkb_list[4][4],s = (10,1),k='5-5'),sg.In(tkb_list[4][5],s = (10,1),k='6-5'),sg.In(tkb_list[4][6],s = (10,1),k='7-5')]
                      ]
     tkb_window = sg.Window('Thời khóa biểu',[[TKB_fixlayout],
-                                             [sg.Button('Chỉnh sửa\nTKB',k='-TKB-')]])
-    evt,_ = tkb_window.read()
+                                             [sg.Button('Chỉnh sửa\nTKB',k='-TKB-'),sg.Button('Xuất TKB ra Excel', k='-EXCEL-')]])
+    evt,val = tkb_window.read()
     if evt == '-TKB-':
-        Chỉnh_sửa_TKB(window)
-         
-    #window['-TKB-'].update(visible=True)
-#if event == 'Thoi khoa bieu' 
+        # while True:
+        #     event2,values2 = TKB_window.read()
+        #     if event2 == sg.WIN_CLOSED: break 
+            #if event2 == 'OK':
+                for i in range(5):
+                    tiết = i+1
+                    for j in range(1,6):
+                        thứ = j+1
+                        tkb_list[i][j] = val['{}-{}'.format(thứ,j)]
+                        mycursor0.execute('Update thoikhoabieu set Thứ_%s = %s where Tiết=%s and Lớp=%s',(thứ,val['{}-{}'.format(thứ,tiết)],tiết,tkb_list[0][7]))
+                mydb.commit()
+                #window['-CLSTABLEMINI-'].update(tkb_list)
+                sg.popup('Thay đổi thông tin thành công')
+                         
+                tkb_window.close()
+    elif evt == '-EXCEL-':
+        Xuất_thời_khóa_biểu_ra_flie_Excel()     
 
-def Chỉnh_sửa_TKB(window):
-    TKB_fixlayout = [[sg.Input(tkb_list[0][1],k='2-1'),sg.In(tkb_list[0][2],k='3-1'),sg.In(tkb_list[0][3],k='4-1'),sg.In(tkb_list[0][4],k='5-1'),sg.In(tkb_list[0][5],k='6-1'),sg.In(tkb_list[0][6],k='7-1')],
-                     [sg.In(tkb_list[1][1],k='2-2'),sg.In(tkb_list[1][2],k='3-2'),sg.In(tkb_list[1][3],k='4-2'),sg.In(tkb_list[1][4],k='5-2'),sg.In(tkb_list[1][5],k='6-2'),sg.In(tkb_list[1][6],k='7-2')],
-                     [sg.In(tkb_list[2][1],k='2-3'),sg.In(tkb_list[2][2],k='3-3'),sg.In(tkb_list[2][3],k='4-3'),sg.In(tkb_list[2][4],k='5-3'),sg.In(tkb_list[2][5],k='6-3'),sg.In(tkb_list[2][6],k='7-3')],
-                     [sg.In(tkb_list[3][1],k='2-4'),sg.In(tkb_list[3][2],k='3-4'),sg.In(tkb_list[3][3],k='4-4'),sg.In(tkb_list[3][4],k='5-4'),sg.In(tkb_list[3][5],k='6-4'),sg.In(tkb_list[3][6],k='7-4')],
-                     [sg.In(tkb_list[4][1],k='2-5'),sg.In(tkb_list[4][2],k='3-5'),sg.In(tkb_list[4][3],k='4-5'),sg.In(tkb_list[4][4],k='5-5'),sg.In(tkb_list[4][5],k='6-5'),sg.In(tkb_list[4][6],k='7-5')],
-                     [sg.OK()]
-                     ]
-    TKB_wd = sg.Window(TKB_fixlayout)
-    while True:
-        event2,values2 = TKB_wd.read()
-        if event2 == sg.WIN_CLOSED: break 
-        if event2 == 'OK':
-            for i in range(5):
-                tiết = i+1
-                for j in range(1,7):
-                    thứ = j+1
-                    tkb_list[i][j] = values2['{thứ}-{j}']
-                    mycursor0.execute('Update thoikhoabieu set Thứ_%s = %s where Tiết=%s and Lớp=%s',(thứ,values2['{thứ}-{j}'],tiết,tkb_list[9]))
-            mydb.commit()
-            window['-CLSTABLEMINI-'].update(tkb_list)
-            sg.popup('Thay đổi thông tin thành công')
-            break         
-    TKB_wd.close()          
+def Xuất_thời_khóa_biểu_ra_flie_Excel():
+    wb = Workbook()
+    ws = wb.active              
+    ws.title = "Thời khóa biểu"
+    ws.append(['Tiết','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'])
+    ws.append(['1',tkb_list[0][1],tkb_list[0][2],tkb_list[0][3],tkb_list[0][4],tkb_list[0][5],tkb_list[0][6]])
+    ws.append(['2',tkb_list[1][1],tkb_list[1][2],tkb_list[1][3],tkb_list[1][4],tkb_list[1][5],tkb_list[1][6]])
+    ws.append(['3',tkb_list[2][1],tkb_list[2][2],tkb_list[2][3],tkb_list[2][4],tkb_list[2][5],tkb_list[2][6]])
+    ws.append(['4',tkb_list[3][1],tkb_list[3][2],tkb_list[3][3],tkb_list[3][4],tkb_list[3][5],tkb_list[3][6]])
+    ws.append(['5',tkb_list[4][1],tkb_list[4][2],tkb_list[4][3],tkb_list[4][4],tkb_list[4][5],tkb_list[4][6]])
+    wb.save('Thời khóa biểu lớp {}.xlsx'.format(tkb_list[0][7]))
+    os.startfile('Thời khóa biểu lớp {}.xlsx'.format(tkb_list[0][7]))

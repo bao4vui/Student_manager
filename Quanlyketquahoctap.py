@@ -9,8 +9,11 @@ result_headings = ['Môn_học','Mã_môn_học','Điểm_miệng','Điểm_15_p
 result_list = []
 mycursor2 = mydb.cursor()
 tổng_kết_các_môn = 0
+std_list_ID = []
+for i in range(len(hs.student_list)):
+    std_list_ID.append(hs.student_list[i][2])
 
-result_lo = [ [sg.T('Mã học sinh: '),sg.InputCombo([i for i in range(2010001,2010011)],k='-ID_CHOSEN-'),sg.Button('Tra cứu',k='-SEARCH-')],
+result_lo = [ [sg.T('Mã học sinh: '),sg.InputCombo(std_list_ID,k='-ID_CHOSEN-'),sg.Button('Tra cứu',k='-SEARCH-')],
               [sg.Frame('Thông tin học sinh',[[sg.T('Họ và tên: ',k='-HVT-')],
                                               [sg.T('Lớp: ',k='-L-')],
                                               [sg.T('Học lực: ',k='-HL-')],
@@ -33,7 +36,7 @@ show_result_querry = ('Select Môn_học,Mã_môn,Điểm_miệng,Điểm_15_ph�
 
 def Nhập_điểm(window,values):
     subject_list = ['Ngữ văn','Toán']
-    add_point = sg.Window('Nhập điểm',layout=[[sg.InputCombo([i for i in range(2010001,2010011)],k='-ID_CHOSEN1-'),sg.Button('Kiểm tra',k='-CHECK-')],
+    add_point = sg.Window('Nhập điểm',layout=[[sg.InputCombo(std_list_ID,k='-ID_CHOSEN1-'),sg.Button('Kiểm tra',k='-CHECK-')],
                                                   [sg.T('Họ và Tên: ',k='-HVT1-')],
                                                   [sg.T('Lớp: ',k='-L1-')],
                                                   [sg.T('Môn: '),sg.InputCombo(subject_list,k='-SUBJ-')],
@@ -133,7 +136,26 @@ def Tính_TK(window,values):
             mycursor2.execute(("update hocsinh set Tổng_kết_các_môn = %s where ID = %s"),(avgpoint,values['-ID_CHOSEN-']))
             mydb.commit()
             window['-HL-'].update('Học lực: Giỏi')
+        
+        elif avgpoint <= 6.5 and avgpoint < 8:
+            mycursor2.execute(("update hocsinh set Học_lực = %s where ID = %s"),('Khá',values['-ID_CHOSEN-']))   
+            mycursor2.execute(("update hocsinh set Tổng_kết_các_môn = %s where ID = %s"),(avgpoint,values['-ID_CHOSEN-']))
+            mydb.commit()
+            window['-HL-'].update('Học lực: Khá')    
+        
+        elif avgpoint <= 5 and avgpoint < 6.5:
+            mycursor2.execute(("update hocsinh set Học_lực = %s where ID = %s"),('Trung_bình',values['-ID_CHOSEN-']))   
+            mycursor2.execute(("update hocsinh set Tổng_kết_các_môn = %s where ID = %s"),(avgpoint,values['-ID_CHOSEN-']))
+            mydb.commit()
+            window['-HL-'].update('Học lực: Trung bình') 
+        elif avgpoint < 5:
+            mycursor2.execute(("update hocsinh set Học_lực = %s where ID = %s"),('Yếu',values['-ID_CHOSEN-']))   
+            mycursor2.execute(("update hocsinh set Tổng_kết_các_môn = %s where ID = %s"),(avgpoint,values['-ID_CHOSEN-']))
+            mydb.commit()
+            window['-HL-'].update('Học lực: Yếu')     
+                
     #window['-CALC-'].update(disabled = True)    
+
 
 def Exit(window):
         result_list.clear()

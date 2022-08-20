@@ -47,6 +47,7 @@ tab1 = False
 tab2 = False
 tab3 = False
 tab4 = False
+tab5 = False
 
 table0 = window['-CLSTABLE-']
 table0.bind('<Button-1>', "Click")
@@ -167,6 +168,9 @@ while True:
     elif event == '-RF-':
         lh.Refresh(window)
     
+    elif event == '-ADDCLS-':
+        lh.Nhập_thêm_lớp(window)
+    
     elif event == '-FIND0-':
        lh.Tìm_kiếm(values,window)
     
@@ -217,7 +221,7 @@ while True:
     elif event == '-FIX-':
        hs.Fix_student(window,row,column,values)
     
-    elif event == 'FIND':
+    elif event == '-FIND-':
         hs.Find_student(window,values)
        
     elif event == '-DEL-':
@@ -395,12 +399,23 @@ while True:
             window['-NEWTAB-'].update(visible=True) 
     elif event == '-EXIT5-':
         tab4 = False
-        if tab0 == True or tab1 == True or tab2 == True or tab3 == True: window['-TAB4-'].update(visible=False)
+        if tab0 == True or tab1 == True or tab2 == True or tab3 == True or tab5 == True: window['-TAB4-'].update(visible=False)
         else:
             window['-TAB0-'].update(visible=False) 
             window['-TAB1-'].update(visible=False)
             window['-TAB2-'].update(visible=False)
             window['-TAB3-'].update(visible=False)
             window['-TAB4-'].update(visible=False)
-            window['-NEWTAB-'].update(visible=True)               
+            window['-NEWTAB-'].update(visible=True) 
+    elif event == '-EXIT6-':      
+        tab5 = False      
+        if tab0 == True or tab1 == True or tab2 == True or tab3 == True or tab4 == True: window['-TAB4-'].update(visible=False)
+        else:
+            window['-TAB0-'].update(visible=False) 
+            window['-TAB1-'].update(visible=False)
+            window['-TAB2-'].update(visible=False)
+            window['-TAB3-'].update(visible=False)
+            window['-TAB4-'].update(visible=False)
+            window['-TAB5-'].update(visible=False)
+            window['-NEWTAB-'].update(visible=True)           
 window.close()    

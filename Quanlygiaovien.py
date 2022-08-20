@@ -79,9 +79,9 @@ def Fix_teacher(window,row,column,values):
 
 def Find_teacher(window,values):
     teacher_search = []
-    for i in range(10):
+    for i in range(9):
         for j in range(len(teacher_list)):
-            if values['-INFOR1-'] == teacher_list[j][i]:
+            if values['-INFOR1-'] in teacher_list[j][i]:
                 teacher_search.append(teacher_list[j])
                 window['-TCTABLE-'].update(teacher_search)
     if values['-INFOR1-'] == '': window['-TCTABLE-'].update(teacher_list)            
