@@ -123,7 +123,8 @@ def Nhập_hạnh_kiểm(row,window,event):
     window['-STDTABLEMINI-'].update(stdmini_list)
     mycursor0.execute(('update hocsinh set Hạnh_kiểm = %s where Họ_và_tên = %s'),(event,stdmini_list[row-1][1]))
     mydb.commit() 
-    
+
+#Click chuột phải để ra thời khóa biểu     
 def Thời_khóa_biểu(row,window):
     tkb_list.clear()
     tkb_headings = ['Tiết','Thứ_2','Thứ_3','Thứ_4','Thứ_5','Thứ_6','Thứ_7']
