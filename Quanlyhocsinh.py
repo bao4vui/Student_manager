@@ -30,18 +30,18 @@ layout = [[sg.Text('\t\t\t   Danh sách học sinh',justification='center',font 
 
 
 def Insert_student(window):
-    add_student = sg.Window('Nhập thông tin học sinh',layout=[[sg.T('*Họ và tên:'),sg.In(key='-FNAME-')],
+    add_student = sg.Window('Nhập thông tin học sinh',layout=[[sg.T('*Họ và tên:',size=(15,1)),sg.In(key='-FNAME-')],
                                                                    [sg.T('Ngày:'),sg.InputCombo([i for i in range(1,32)],k='-D-'),
                                                                     sg.T('Tháng:'),sg.InputCombo([i for i in range(1,13)],k='-M-'),
                                                                     sg.T('Năm:'),sg.InputCombo([i for i in range(2000,2022)],k='-Y-')
                                                                     ],
-                                                                   [sg.T('ID: \t'),sg.In(k='-ID-',expand_x=True)],
-                                                                   [sg.T('Lớp: \t'),sg.In(k='-CLASS-',expand_x=True)],
-                                                                   [sg.T('Giới tính:'),sg.Checkbox('Nam',k='-NAM-'),sg.Checkbox('Nữ',k='-NỮ-',expand_x=True)],
-                                                                   [sg.T('Nơi sinh:'),sg.In(k='-BORN-',expand_x=True)],
-                                                                   [sg.T('Dân tộc:'),sg.In(k='-KIND-',expand_x=True)],
-                                                                   [sg.T('Địa chỉ:'),sg.In(k='-ADDRESS-',expand_x=True)],
-                                                                   [sg.T('Ghi chú:'),sg.In(k='-NOTE-',expand_x=True)],
+                                                                   [sg.T('ID: \t',size=(15,1)),sg.In(k='-ID-',expand_x=True)],
+                                                                   [sg.T('Lớp: \t',size=(15,1)),sg.In(k='-CLASS-',expand_x=True)],
+                                                                   [sg.T('Giới tính:',size=(15,1)),sg.Checkbox('Nam',k='-NAM-'),sg.Checkbox('Nữ',k='-NỮ-',expand_x=True)],
+                                                                   [sg.T('Nơi sinh:',size=(15,1)),sg.In(k='-BORN-',expand_x=True)],
+                                                                   [sg.T('Dân tộc:',size=(15,1)),sg.In(k='-KIND-',expand_x=True)],
+                                                                   [sg.T('Địa chỉ:',size=(15,1)),sg.In(k='-ADDRESS-',expand_x=True)],
+                                                                   [sg.T('Ghi chú:',size=(15,1)),sg.In(k='-NOTE-',expand_x=True)],
                                                                    [sg.OK('Xác nhận',key='-OK-'),sg.Cancel(key='-CANCEL-')]])
     while True:
             choices, values2 = add_student.read()
@@ -77,16 +77,16 @@ def Fix_student(window,row,column,values):
 
 def Find_student(window,values):
     student_search = []
-    for i in range(9):
-        for j in range(len(student_list)):
-            values['-INFOR-'] = str(values['-INFOR-'])
-            text = str(student_list[j][i])
-            if re.findall(values['-INFOR-'],text):
-                print('Yes')
-                student_search.append(student_list[j])
-                window['-STDTABLE-'].update(student_search)
+    if values['-INFOR-'] != '':
+        for i in range(9):
+            for j in range(len(student_list)):
+                values['-INFOR-'] = str(values['-INFOR-'])
+                text = str(student_list[j][i])
+                if re.findall(values['-INFOR-'],text):
+                    student_search.append(student_list[j])
+                    window['-STDTABLE-'].update(student_search)
                 
-    if values['-INFOR-'] == '': window['-STDTABLE-'].update(student_list)
+    elif values['-INFOR-'] == '': window['-STDTABLE-'].update(student_list)
     student_search.clear()
     
 def Delete_student(window,row):

@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from Quanlyhocsinh import mydb
 import re
 mycursor1 = mydb.cursor()
-mysubcur1 = mydb.cursor()
+
 mycursor1.execute('select * from Giaovien')
 teachers = mycursor1.fetchall()
 
@@ -79,13 +79,14 @@ def Fix_teacher(window,row,column,values):
 
 def Find_teacher(window,values):
     teacher_search = []
-    for i in range(9):
-        for j in range(len(teacher_list)):
-            text = str(teacher_list[j][i])
-            if re.findall(values['-INFOR1-'],text):
-                teacher_search.append(teacher_list[j])
-                window['-TCTABLE-'].update(teacher_search)
-    if values['-INFOR1-'] == '': window['-TCTABLE-'].update(teacher_list)            
+    if values['-INFOR1-'] != '':
+        for i in range(9):
+            for j in range(len(teacher_list)):
+                text = str(teacher_list[j][i])
+                if re.findall(values['-INFOR1-'],text):
+                    teacher_search.append(teacher_list[j])
+                    window['-TCTABLE-'].update(teacher_search)
+    elif values['-INFOR1-'] == '': window['-TCTABLE-'].update(teacher_list)            
     
 def Delete_teacher(window,row):
     #print(hs.result_list[row-1][2])
@@ -99,13 +100,6 @@ def Delete_teacher(window,row):
         sg.popup('Xóa thông tin thành công!') 
         window['-DEL1-'].update(disabled = True)  
 
-mysubcur1.execute('select Tên_đăng_nhập,Mật_khẩu,Họ_và_tên from taikhoangiaovien')
-Account_Password = mysubcur1.fetchall()
-Account_Password_list = []
-Name_list = []
-for i in Account_Password:
-    Account_Password_list.append((i[0],i[1]))
-    
-    Name_list.append(i[2])
+
     
             

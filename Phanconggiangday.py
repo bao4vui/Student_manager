@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from Quanlyhocsinh import mydb
 import re
 mycursor = mydb.cursor()
-strat_headings = ['Môn','Giáo_viên_giảng dạy','Lớp_được_dạy']
+strat_headings = ['Môn','Giáo_viên_giảng_dạy','Lớp_được_dạy']
 
 mycursor.execute('select * from phanconggiangday')
 strat =  mycursor.fetchall()
@@ -24,6 +24,8 @@ def Nhập(window):
     add_strat = sg.Window('Phân công giáo viên',layout=[[sg.T('Môn:\t', size =(15, 1)),sg.In(k='-SUBJ-')],
                                                         [sg.T('Giáo viên phụ trách:', size =(15, 1)),sg.In(k='-TC-')],
                                                         [sg.T('Lớp được dạy:', size =(15, 1)),sg.In(k='-CLS-')],
+                                                        [sg.T('Kì học: ', size =(15, 1)),sg.In(k='-SEMESTER-')],
+                                                        [sg.T('Năm học: ', size =(15, 1)),sg.In(k='-YEARBOOK-')]
                                                         [sg.Ok('Xác nhận',k = '-OKSTRAT-')]])
     while True:
         choices,values = add_strat.read()
@@ -33,10 +35,10 @@ def Nhập(window):
            if values['-SUBJ-'] == '':
                sg.popup('Bạn chưa điền đầy đủ thông tin cần thiết')     
            else:
-               mycursor.execute(('insert into phanconggiangday values(%s,%s,%s)'),
-                                (values['-SUBJ-'],values['-TC-'],values['-CLS-']))
+               mycursor.execute(('insert into phanconggiangday values(%s,%s,%s,%s,%s)'),
+                                (values['-SUBJ-'],values['-TC-'],values['-CLS-'],values['-SEMESTER-'],values['-YEARBOOK-']))
                sg.popup('Đã thêm thông tin mới')
-               strat_list.append([values['-SUBJ-'],values['-TC-'],values['-CLS-']])
+               strat_list.append([values['-SUBJ-'],values['-TC-'],values['-CLS-'],values['-SEMESTER-'],values['-YEARBOOK-']])
                window['-STRATTABLE-'].update(strat_list)
                mydb.commit()
                break
@@ -52,12 +54,13 @@ def Sửa(window,values,row,column):
     
 def Tìm_kiếm(window,values):
     strat_search = []   
-    for i in range(3):
-        for j in range(len(strat_list)):
-            text = str(strat_list[j][i])
-            if re.findall(values['-INFOR1-'],text):
-                strat_search.append(strat_list[j])
-                window['-STRATTABLE-'].update(strat_search)
+    if values['-INFOR5-'] != '':
+        for i in range(3):
+            for j in range(len(strat_list)):
+                text = str(strat_list[j][i])
+                if re.findall(values['-INFOR1-'],text):
+                    strat_search.append(strat_list[j])
+                    window['-STRATTABLE-'].update(strat_search)
     if values['-INFOR5-'] == '': window['-STRATTABLE-'].update(strat_list) 
 
 def Xóa(window,row):

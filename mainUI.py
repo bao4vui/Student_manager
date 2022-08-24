@@ -6,6 +6,7 @@ import Quanlygiaovien as gv
 import Quanlyketquahoctap as kq
 import Baocaothongke as rp
 import Phanconggiangday as pc 
+import Quanlytaikhoangiaovien as tk
 menu_board = sg.Column([[sg.Button('\t\n  Quản lý Lớp học  \n\t',use_ttk_buttons=True,pad=(10,10),k='-CLASS-',expand_x = True)],
                         [sg.Button('\t\n  Quản lý Học sinh  \n\t',use_ttk_buttons=True,pad=(10,10),k='-STUDENT-',expand_x = True)],
                         [sg.Button('\t\n  Quản lý Giáo viên  \n\t',use_ttk_buttons=True,pad=(10,10),k='-TEACHER-',expand_x = True)],
@@ -68,16 +69,16 @@ table3.bind('<Button-3>', "Click")
 table5 = window['-STRATTABLE-']
 table5.bind('<Button-1>', "Click")
 
-print(gv.Account_Password_list)
+print(tk.Account_Password_list)
 while True:
     while login_status == False:
         event0, values0 = Log_in.read()
         if event0 == sg.WIN_CLOSED:
             break
         if event0 == '-LOGIN-':
-            for i in range(len(gv.Account_Password_list)):
-                if (values0['-ACCOUNT-'] == gv.Account_Password_list[i][0]):
-                    if values0['-PASSWORD-'] != gv.Account_Password_list[i][1]:    
+            for i in range(len(tk.Account_Password_list)):
+                if (values0['-ACCOUNT-'] == tk.Account_Password_list[i][0]):
+                    if values0['-PASSWORD-'] != tk.Account_Password_list[i][1]:    
                         Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
                 
                     else:
@@ -87,8 +88,8 @@ while True:
                         window.un_hide()
                         window.extend_layout(window['-GREETING-'],[[sg.Text('Xin chào {}!'.format(gv.Name_list[i]),font='Calibra 15',relief='solid',border_width=1)]])
                 
-                elif values0['-PASSWORD-'] == gv.Account_Password_list[i][1]:
-                    if (values0['-ACCOUNT-'] != gv.Account_Password_list[i][0]):
+                elif values0['-PASSWORD-'] == tk.Account_Password_list[i][1]:
+                    if (values0['-ACCOUNT-'] != tk.Account_Password_list[i][0]):
                         Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
     
     event, values = window.read()
@@ -371,6 +372,8 @@ while True:
             window['-TAB1-'].update(visible=False)
             window['-TAB2-'].update(visible=False)
             window['-TAB3-'].update(visible=False)
+            window['-TAB4-'].update(visible=False)
+            window['-TAB5-'].update(visible=False)
             window['-NEWTAB-'].update(visible=True)
             #no_tab = True    
         
@@ -382,6 +385,8 @@ while True:
             window['-TAB1-'].update(visible=False)
             window['-TAB2-'].update(visible=False)
             window['-TAB3-'].update(visible=False)
+            window['-TAB4-'].update(visible=False)
+            window['-TAB5-'].update(visible=False)
             window['-NEWTAB-'].update(visible=True)
             #no_tab = True    
     elif event == '-EXIT2-':
@@ -392,6 +397,8 @@ while True:
             window['-TAB1-'].update(visible=False)
             window['-TAB2-'].update(visible=False)
             window['-TAB3-'].update(visible=False)
+            window['-TAB4-'].update(visible=False)
+            window['-TAB5-'].update(visible=False)
             window['-NEWTAB-'].update(visible=True)
             #no_tab = True
     elif event == '-EXIT4-':
@@ -403,6 +410,8 @@ while True:
             window['-TAB1-'].update(visible=False)
             window['-TAB2-'].update(visible=False)
             window['-TAB3-'].update(visible=False)
+            window['-TAB4-'].update(visible=False)
+            window['-TAB5-'].update(visible=False)
             window['-NEWTAB-'].update(visible=True) 
     elif event == '-EXIT5-':
         tab4 = False
@@ -413,6 +422,7 @@ while True:
             window['-TAB2-'].update(visible=False)
             window['-TAB3-'].update(visible=False)
             window['-TAB4-'].update(visible=False)
+            window['-TAB5-'].update(visible=False)
             window['-NEWTAB-'].update(visible=True) 
     elif event == '-EXIT6-':      
         tab5 = False      
