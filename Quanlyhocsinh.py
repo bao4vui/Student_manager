@@ -1,7 +1,7 @@
 from asyncio.windows_events import NULL
 import PySimpleGUI as sg
 import mysql.connector
-
+import re
 
 mydb = mysql.connector.connect(host='localhost',
                                user='root',
@@ -79,9 +79,13 @@ def Find_student(window,values):
     student_search = []
     for i in range(9):
         for j in range(len(student_list)):
-            if values['-INFOR-'] in student_list[j][i]:
+            values['-INFOR-'] = str(values['-INFOR-'])
+            text = str(student_list[j][i])
+            if re.findall(values['-INFOR-'],text):
+                print('Yes')
                 student_search.append(student_list[j])
                 window['-STDTABLE-'].update(student_search)
+                
     if values['-INFOR-'] == '': window['-STDTABLE-'].update(student_list)
     student_search.clear()
     

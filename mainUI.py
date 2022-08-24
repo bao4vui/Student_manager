@@ -76,19 +76,20 @@ while True:
             break
         if event0 == '-LOGIN-':
             for i in range(len(gv.Account_Password_list)):
-                # if (values0['-ACCOUNT-'] == gv.Account_Password_list[i][0]):
-                #     if values0['-PASSWORD-'] != gv.Account_Password_list[i][1]:    
-                #         Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
+                if (values0['-ACCOUNT-'] == gv.Account_Password_list[i][0]):
+                    if values0['-PASSWORD-'] != gv.Account_Password_list[i][1]:    
+                        Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
                 
-                #     else:
+                    else:
                         login_status = True
+                        Log_in['-MSG-'].update('')
                         Log_in.hide()
                         window.un_hide()
-                #        window.extend_layout(window['-GREETING-'],[[sg.Text('Xin chào {}!'.format(gv.Name_list[i]),font='Calibra 15',relief='solid',border_width=1)]])
+                        window.extend_layout(window['-GREETING-'],[[sg.Text('Xin chào {}!'.format(gv.Name_list[i]),font='Calibra 15',relief='solid',border_width=1)]])
                 
-                # elif values0['-PASSWORD-'] == gv.Account_Password_list[i][1]:
-                #     if (values0['-ACCOUNT-'] != gv.Account_Password_list[i][0]):
-                #         Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
+                elif values0['-PASSWORD-'] == gv.Account_Password_list[i][1]:
+                    if (values0['-ACCOUNT-'] != gv.Account_Password_list[i][0]):
+                        Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
     
     event, values = window.read()
     
@@ -181,7 +182,7 @@ while True:
     elif event == '-DEL0-':
         lh.Xóa_lớp(window,row0)
 
-
+    print(type(values['-INFOR-']))
 #Quản lý học sinh    
     if event == '-STUDENT-':
         no_tab = False

@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from Quanlyhocsinh import mydb
-
+import re
 mycursor1 = mydb.cursor()
 mysubcur1 = mydb.cursor()
 mycursor1.execute('select * from Giaovien')
@@ -81,7 +81,8 @@ def Find_teacher(window,values):
     teacher_search = []
     for i in range(9):
         for j in range(len(teacher_list)):
-            if values['-INFOR1-'] in teacher_list[j][i]:
+            text = str(teacher_list[j][i])
+            if re.findall(values['-INFOR1-'],text):
                 teacher_search.append(teacher_list[j])
                 window['-TCTABLE-'].update(teacher_search)
     if values['-INFOR1-'] == '': window['-TCTABLE-'].update(teacher_list)            

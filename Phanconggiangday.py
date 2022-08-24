@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from Quanlyhocsinh import mydb
-
+import re
 mycursor = mydb.cursor()
 strat_headings = ['Môn','Giáo_viên_giảng dạy','Lớp_được_dạy']
 
@@ -54,7 +54,8 @@ def Tìm_kiếm(window,values):
     strat_search = []   
     for i in range(3):
         for j in range(len(strat_list)):
-            if values['-INFOR5-'] in strat_list[j][i]:
+            text = str(strat_list[j][i])
+            if re.findall(values['-INFOR1-'],text):
                 strat_search.append(strat_list[j])
                 window['-STRATTABLE-'].update(strat_search)
     if values['-INFOR5-'] == '': window['-STRATTABLE-'].update(strat_list) 
