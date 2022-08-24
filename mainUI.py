@@ -36,7 +36,7 @@ layout1 = [[sg.Menu(menu_left)],
 login_layout = [[sg.T('Tên đăng nhập:      '),sg.In(k='-ACCOUNT-')],
                 [sg.T('Mật khẩu: \t'),sg.In(password_char='*',k='-PASSWORD-')],
                 [sg.Text('',k='-MSG-',text_color='red')],
-                [sg.Button('Đăng nhập',k='-LOGIN-'),sg.Button('Quên mật khẩu',k='-FORGETPASS-')]]
+                [sg.Button('Đăng nhập',k='-LOGIN-',bind_return_key=True),sg.Button('Quên mật khẩu',k='-FORGETPASS-')]]
 Log_in = sg.Window('Quản lý học sinh',login_layout)
 window = sg.Window('Quản lý học sinh', layout1,location=(5,70),finalize=True)
 window.hide()
@@ -75,16 +75,16 @@ while True:
         if event0 == sg.WIN_CLOSED:
             break
         if event0 == '-LOGIN-':
-            # for i in range(len(gv.Account_Password_list)):
-            #     if (values0['-ACCOUNT-'] == gv.Account_Password_list[i][0]):
-            #         if values0['-PASSWORD-'] != gv.Account_Password_list[i][1]:    
-            #             Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
+            for i in range(len(gv.Account_Password_list)):
+                # if (values0['-ACCOUNT-'] == gv.Account_Password_list[i][0]):
+                #     if values0['-PASSWORD-'] != gv.Account_Password_list[i][1]:    
+                #         Log_in['-MSG-'].update('Tài khoản hoặc mật khẩu của bạn chưa đúng,vui lòng thử lại')
                 
-                    # else:
+                #     else:
                         login_status = True
                         Log_in.hide()
                         window.un_hide()
-                        # window.extend_layout(window['-GREETING-'],[[sg.Text('Xin chào {}!'.format(gv.Name_list[i]),font='Calibra 15',relief='solid',border_width= 1)]])
+                #        window.extend_layout(window['-GREETING-'],[[sg.Text('Xin chào {}!'.format(gv.Name_list[i]),font='Calibra 15',relief='solid',border_width=1)]])
                 
                 # elif values0['-PASSWORD-'] == gv.Account_Password_list[i][1]:
                 #     if (values0['-ACCOUNT-'] != gv.Account_Password_list[i][0]):
@@ -105,6 +105,7 @@ while True:
         window.hide()
         sleep(2)
         Log_in.un_hide()
+        
         
 
 #Quản lý lớp học
@@ -179,10 +180,6 @@ while True:
        
     elif event == '-DEL0-':
         lh.Xóa_lớp(window,row0)
-
-
-
-
 
 
 #Quản lý học sinh    
@@ -348,9 +345,18 @@ while True:
         if pc.strat_list[row5-1][column5-1] == None:
             window['-INFOR5-'].update('')
         else: window['-INFOR5-'].update(pc.strat_list[row5-1][column5-1])
+    
+    elif event == '-INSERT5-':
+        pc.Nhập(window)
+    
     elif event == '-FIX5-':
         pc.Sửa(window,values,row5,column5)    
-
+    
+    elif event == '-FIX5-':
+        pc.Tìm_kiếm(window,values)
+    
+    elif event == '-FIX5-':
+        pc.Xóa(window,row5)    
 
 
 #Thoát

@@ -103,7 +103,7 @@ def Tra_điểm(window,values):
                 window['-L-'].update('Lớp: {}'.format(hs.student_list[j][3]))
                 window['-HL-'].update('Học lực: {}'.format(hs.student_list[j][10]))
                 window['-ATT-'].update('Hạnh kiểm: {}'.format(hs.student_list[j][11]))
-                window['-AVGPOINT-'].update('Điểm tổng kết học kỳ của tất cả các môn: {}'.format(hs.student_list[j][12]))
+                window['-AVGPOINT-'].update('Điểm tổng kết học kỳ của tất cả các môn: {}'.format(hs.student_list[j][11]))
                 window['-RESTABLE-'].update(result_list,visible=True) 
     print(len(result_list))
     if len(result_list) < SỐ_MÔN_ĐIỀU_KIỆN: window['-CALC-'].update(disabled = True)

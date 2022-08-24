@@ -28,19 +28,19 @@ teacher_lo = [[sg.Text('\t\t\t   Danh sách giáo viên',justification='center',
 
 
 def Insert_teacher(window):
-    add_teacher = sg.Window('Nhập thông tin giáo viên',layout=[[sg.T('*Họ và tên:'),sg.In(key='-FNAME1-')],
+    add_teacher = sg.Window('Nhập thông tin giáo viên',layout=[[sg.T('*Họ và tên:', size =(15, 1)),sg.In(key='-FNAME1-')],
                                                                    [sg.T('Ngày:'),sg.InputCombo([i for i in range(1,32)],k='-D1-'),
                                                                     sg.T('Tháng:'),sg.InputCombo([i for i in range(1,13)],k='-M1-'),
                                                                     sg.T('Năm:'),sg.InputCombo([i for i in range(2000,2022)],k='-Y1-')
                                                                     ],
-                                                                   [sg.T('ID: \t'),sg.In(k='-ID1-',expand_x=True)],
-                                                                   [sg.T('Lớp: \t'),sg.In(k='-CLASS-',expand_x=True)],
-                                                                   [sg.T('Giới tính:'),sg.Checkbox('Nam',k='-NAM1-'),sg.Checkbox('Nữ',k='-NỮ1-',expand_x=True)],
-                                                                   [sg.T('Chuyên môn:'),sg.In(k='-MAJOR-',expand_x=True)],
-                                                                   [sg.T('Trình độ:'),sg.In(k='-LEVEL-',expand_x=True)],
-                                                                   [sg.T('Số điện thoại:'),sg.In(k='-PHONE-',expand_x=True)],
-                                                                   [sg.T('Chức vụ:'),sg.In(k='-JOB-',expand_x=True)],
-                                                                   [sg.T('Ghi chú:'),sg.In(k='-NOTE1-',expand_x=True)],
+                                                                   [sg.T('ID:', size =(15, 1)),sg.In(k='-ID1-',expand_x=True)],
+                                                                   [sg.T('Lớp:' , size =(15, 1)),sg.In(k='-CLASS-',expand_x=True)],
+                                                                   [sg.T('Giới tính:', size =(15, 1)),sg.Checkbox('Nam',k='-NAM1-'),sg.Checkbox('Nữ',k='-NỮ1-',expand_x=True)],
+                                                                   [sg.T('Chuyên môn:', size =(15, 1)),sg.In(k='-MAJOR-',expand_x=True)],
+                                                                   [sg.T('Trình độ:', size =(15, 1)),sg.In(k='-LEVEL-',expand_x=True)],
+                                                                   [sg.T('Số điện thoại:', size =(15, 1)),sg.In(k='-PHONE-',expand_x=True)],
+                                                                   [sg.T('Chức vụ:', size =(15, 1)),sg.In(k='-JOB-',expand_x=True)],
+                                                                   [sg.T('Ghi chú:', size =(15, 1)),sg.In(k='-NOTE1-',expand_x=True)],
                                                                    [sg.OK('Xác nhận',key='-OK1-'),sg.Cancel(key='-CANCEL1-')]])
     while True:
             choices, values2 = add_teacher.read()

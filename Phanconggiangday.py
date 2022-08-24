@@ -21,9 +21,9 @@ strat_lo = [[sg.Text('\tPhân công giảng dạy',justification='center',font =
               [sg.Exit(k='-EXIT6-')]]    
 
 def Nhập(window):
-    add_strat = sg.Window('Phân công giáo viên',layout=[[sg.T('Môn:'),sg.In(k='-SUBJ-')],
-                                                        [sg.T('Giáo viên phụ trách:'),sg.In(k='-TC-')],
-                                                        [sg.T('Lớp được dạy:'),sg.In(k='-CLS-')],
+    add_strat = sg.Window('Phân công giáo viên',layout=[[sg.T('Môn:\t', size =(15, 1)),sg.In(k='-SUBJ-')],
+                                                        [sg.T('Giáo viên phụ trách:', size =(15, 1)),sg.In(k='-TC-')],
+                                                        [sg.T('Lớp được dạy:', size =(15, 1)),sg.In(k='-CLS-')],
                                                         [sg.Ok('Xác nhận',k = '-OKSTRAT-')]])
     while True:
         choices,values = add_strat.read()
