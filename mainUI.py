@@ -86,7 +86,7 @@ while True:
                         Log_in['-MSG-'].update('')
                         Log_in.hide()
                         window.un_hide()
-                        window.extend_layout(window['-GREETING-'],[[sg.Text('Xin chào {}!'.format(gv.Name_list[i]),font='Calibra 15',relief='solid',border_width=1)]])
+                        window.extend_layout(window['-GREETING-'],[[sg.Text('Xin chào {}!'.format(tk.Name_list[i]),font='Calibra 15',relief='solid',border_width=1)]])
                 
                 elif values0['-PASSWORD-'] == tk.Account_Password_list[i][1]:
                     if (values0['-ACCOUNT-'] != tk.Account_Password_list[i][0]):
